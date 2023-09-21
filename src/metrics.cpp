@@ -38,7 +38,7 @@ namespace Metrics
 		IGaugeValue& operator+=(double value) override
 		{
 			// TODO: revisit memory ordering
-			double oldv, newv;
+			double oldv = 0, newv = 0;
 			do
 			{
 				oldv = m_value.load();
@@ -50,7 +50,7 @@ namespace Metrics
 		IGaugeValue& operator-=(double value) override
 		{
 			// TODO: revisit memory ordering
-			double oldv, newv;
+			double oldv = 0, newv = 0;
 			do
 			{
 				oldv = m_value.load();
@@ -81,7 +81,7 @@ namespace Metrics
 			m_value.fetch_add(1, std::memory_order_acq_rel);
 			return *this;
 		};
-		ICounterValue& operator+=(uint32_t value) override
+		ICounterValue& operator+=(uint64_t value) override
 		{
 			m_value.fetch_add(value, std::memory_order_acq_rel);
 			return *this;
