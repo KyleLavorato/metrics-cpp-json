@@ -243,9 +243,8 @@ namespace Metrics
         }
 
         // Write JSON file
-        FILE* fp2 = NULL;
-        errno_t err = 0;
-        if ((err = fopen_s(&fp2, filename.c_str(), "w")) == 0)
+        FILE* fp2 = fopen(filename.c_str(), "w");
+        if (fp2)
         {
             char writeBuffer[65536];
             FileWriteStream os(fp2, writeBuffer, sizeof(writeBuffer));
