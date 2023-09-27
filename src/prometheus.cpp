@@ -122,7 +122,7 @@ namespace Metrics
         return label.substr(0, pos);
     }
 
-    void serializeJSON(const IRegistry& registry, std::string filename) {
+    std::string serializeJSON(const IRegistry& registry, std::string filename) {
         using namespace rapidjson;
 
         // Create the JSON document
@@ -243,14 +243,27 @@ namespace Metrics
         }
 
         // Write JSON file
-        FILE* fp2 = fopen(filename.c_str(), "w");
-        if (fp2)
+        if (filename.length() == 0)
         {
-            char writeBuffer[65536];
-            FileWriteStream os(fp2, writeBuffer, sizeof(writeBuffer));
-            Writer<FileWriteStream> writer(os);
+            rapidjson::StringBuffer buffer;
+            buffer.Clear();
+            rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
             d.Accept(writer);
-            fclose(fp2);
+            return buffer.GetString();
+        }
+        else
+        {
+            // Write JSON file
+            FILE* fp2 = fopen(filename.c_str(), "w");
+            if (fp2)
+            {
+                char writeBuffer[65536];
+                FileWriteStream os(fp2, writeBuffer, sizeof(writeBuffer));
+                Writer<FileWriteStream> writer(os);
+                d.Accept(writer);
+                fclose(fp2);
+            }
+            return "";
         }
     }
 }
