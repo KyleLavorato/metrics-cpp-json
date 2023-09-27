@@ -182,6 +182,31 @@ gauge2,another=label|200|g
 )"));
 }
 
+TEST_CASE("Serialize.JSON", "[JSON]")
+{
+    auto registry = createReferenceRegistry();
+    std::string result = serializeJSON(*registry, "");
+    REQUIRE_THAT(result, Equals(R"({"counter1":1,"counter2":2,"gauge1":100.0,"gauge2":200.0,"histogram1":{"1x":1,"2x":2,"5x":2,"sum":3.0,"average":1.5,"count":2},"histogram2":{"1x":0,"2x":0,"5x":2,"sum":7.0,"average":3.5,"count":2}})"));
+
+    std::string empty = serializeJSON(*registry, "test.json");
+    CHECK(empty.length() == 0);
+
+    FILE* fp = fopen("test.json", "r");
+    if (fp)
+    {
+        char buffer[512] = { 0 };
+        fread(buffer, result.length(), 1, fp);
+        std::string json(buffer);
+        fclose(fp);
+
+        REQUIRE_THAT(result, Equals(json));
+    }
+    else
+    {
+        CHECK_FALSE(1 == 1);
+    }
+}
+
 TEST_CASE("Timer.Counter", "[timer][counter]")
 {
     Counter c;
