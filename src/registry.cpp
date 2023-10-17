@@ -85,6 +85,18 @@ namespace Metrics
             return m_metrics.emplace(key, metric).second;
         }
 
+        virtual void clean(void) override
+        {
+            std::unique_lock<std::mutex> lock(m_mutex);
+
+            std::map<Key, std::shared_ptr<IMetric>>::iterator iter = m_metrics.begin();
+            while (iter != m_metrics.end())
+            {
+                m_metrics.erase(iter);
+                iter = m_metrics.begin();
+            }
+        }
+
         virtual std::shared_ptr<IMetric> get(const Key& key) const override
         {
             std::unique_lock<std::mutex> lock(m_mutex);
