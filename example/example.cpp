@@ -32,7 +32,22 @@ void metricsTest() {
     timerExample();
     timerExample();
 
+    // Save metrics to file
     Metrics::serializeJSON(Metrics::defaultRegistry(), "example.json");
+    
+    // Get metrics JSON string
+    std::string strMetrics = Metrics::serializeJSON(Metrics::defaultRegistry(), "");
+    std::cout << "Metrics[1]: " << strMetrics.c_str() << std::endl;
+
+    // Clean metrics
+    Metrics::defaultRegistry().clean();
+    strMetrics = Metrics::serializeJSON(Metrics::defaultRegistry(), "");
+    std::cout << "Metrics[2]: " << strMetrics.c_str() << std::endl;
+
+    timerExample();
+    // Get metrics JSON string
+    strMetrics = Metrics::serializeJSON(Metrics::defaultRegistry(), "");
+    std::cout << "Metrics[3]: " << strMetrics.c_str() << std::endl;
 }
 
 int main() {

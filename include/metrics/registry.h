@@ -91,6 +91,8 @@ namespace Metrics
         /// <returns></returns>
         virtual bool add(const Key& key, std::shared_ptr<IMetric> metric) = 0;
 
+        virtual void clean(void) = 0;
+
         virtual std::vector<Key> keys() const = 0;
 
         virtual ~IRegistry() = 0;
